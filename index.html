@@ -385,26 +385,19 @@
     </footer>
     <!-- Chatbot -->
     <div class="fixed bottom-6 right-6 z-50">
-        <div id="chatbot-container" class="hidden w-80 bg-white rounded-lg shadow-xl overflow-hidden flex flex-col" style="height: 500px;">
+        <div id="chatbot-container" class="hidden w-80 bg-white rounded-lg shadow-xl overflow-hidden flex flex-col" style="height: 550px;">
             <div class="bg-primary text-white p-4 flex justify-between items-center">
-                <h3 class="font-bold">KareGut Assistant</h3>
+                <h3 class="font-bold">🌱 KareGut Assistant</h3>
                 <button id="close-chat" class="text-white hover:text-gray-200">
                     <i data-feather="x"></i>
                 </button>
             </div>
             <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4">
-                <div class="bg-gray-100 p-3 rounded-lg">
-                    <p>Hello! I'm your KareGut assistant. How can I help you today?</p>
-                    <div class="mt-2 space-y-2">
-                        <button class="chat-question" data-question="What is lactose intolerance?">What is lactose intolerance?</button>
-                        <button class="chat-question" data-question="How are your products made?">How are your products made?</button>
-                        <button class="chat-question" data-question="Where can I buy KareGut products?">Where can I buy KareGut products?</button>
-                    </div>
-                </div>
+                <!-- Initial greeting will be inserted here by JavaScript -->
             </div>
             <div class="p-4 border-t">
                 <div class="flex">
-                    <input type="text" id="chat-input" placeholder="Type your question..." class="flex-1 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                    <input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary">
                     <button id="send-chat" class="px-4 py-2 bg-primary text-white rounded-r-lg hover:bg-green-700">
                         <i data-feather="send"></i>
                     </button>
@@ -484,7 +477,9 @@
                     }, 100);
                 }
             }
-        }        // Chatbot functionality
+        }
+
+        // Chatbot functionality
         const chatButton = document.getElementById('chat-button');
         const chatbotContainer = document.getElementById('chatbot-container');
         const closeChat = document.getElementById('close-chat');
@@ -492,30 +487,355 @@
         const chatInput = document.getElementById('chat-input');
         const sendChat = document.getElementById('send-chat');
         
-        const responses = {
-            "What is lactose intolerance?": "Lactose intolerance is the inability to digest lactose, the main carbohydrate in dairy products. It occurs when your small intestine doesn't produce enough of the enzyme lactase.",
-            "How are your products made?": "Our products are made using traditional dairy processes but with an additional step where we break down the lactose molecules while preserving all the nutritional benefits of dairy.",
-            "Where can I buy KareGut products?": "Currently our products are available in select health food stores and supermarkets. You can check our store locator on our website for locations near you.",
-            "Are your products safe for children?": "Absolutely! Our lactose-free dairy products are safe and nutritious for children of all ages, providing essential calcium and protein for growing bodies."
+        let chatState = 'greeting';
+        let userPreferences = {};
+
+        // Chatbot conversation flows
+        const chatFlows = {
+            greeting: {
+                message: "👋 Hi there! Welcome to KareGut, your companion for a happy and healthy gut!\n\nWould you like to know about:",
+                options: [
+                    { text: "🥛 Our probiotic dairy products", action: "products" },
+                    { text: "❤️ Gut health tips", action: "health_tips" },
+                    { text: "🛒 Shop products", action: "shop" },
+                    { text: "🤖 Something else", action: "support" }
+                ]
+            },
+            products: {
+                message: "Great choice! KareGut offers a range of gut-friendly, lactose-free products packed with live probiotics.\n\nWhich product would you like to explore?",
+                options: [
+                    { text: "🧀 Yogurt Puff – light, crunchy probiotic snack", action: "product_yogurt" },
+                    { text: "🍶 Unsweetened Condensed Milk – creamy & lactose-free", action: "product_milk" },
+                    { text: "🥛 Powdered Milk – versatile dairy essential", action: "product_powder" },
+                    { text: "🔙 Back to main menu", action: "greeting" }
+                ]
+            },
+            product_yogurt: {
+                message: "Here's what makes our Yogurt Puff special:\n\n✓ 100% lactose-free\n✓ Packed with live probiotics for gut balance\n✓ All-natural ingredients\n✓ Light and crunchy texture\n\nWould you like to see:",
+                options: [
+                    { text: "📦 Ingredients & nutrition", action: "yogurt_nutrition" },
+                    { text: "🕒 Shelf life & storage info", action: "yogurt_storage" },
+                    { text: "💲 Price & availability", action: "yogurt_price" },
+                    { text: "🔙 Back to products", action: "products" }
+                ]
+            },
+            product_milk: {
+                message: "Here's what makes our Unsweetened Condensed Milk special:\n\n✓ 100% lactose-free\n✓ Packed with live probiotics for gut balance\n✓ All-natural ingredients\n✓ Rich and creamy texture\n\nWould you like to see:",
+                options: [
+                    { text: "📦 Ingredients & nutrition", action: "milk_nutrition" },
+                    { text: "🕒 Shelf life & storage info", action: "milk_storage" },
+                    { text: "💲 Price & availability", action: "milk_price" },
+                    { text: "🔙 Back to products", action: "products" }
+                ]
+            },
+            product_powder: {
+                message: "Here's what makes our Powdered Milk special:\n\n✓ 100% lactose-free\n✓ Packed with live probiotics for gut balance\n✓ All-natural ingredients\n✓ Versatile and convenient\n\nWould you like to see:",
+                options: [
+                    { text: "📦 Ingredients & nutrition", action: "powder_nutrition" },
+                    { text: "🕒 Shelf life & storage info", action: "powder_storage" },
+                    { text: "💲 Price & availability", action: "powder_price" },
+                    { text: "🔙 Back to products", action: "products" }
+                ]
+            },
+            yogurt_nutrition: {
+                message: "🧀 Yogurt Puff Nutrition:\n\n• Calories: 120 per serving\n• Protein: 8g\n• Calcium: 25% DV\n• Live cultures: 1 billion CFU\n• No added sugars\n• Gluten-free",
+                options: [
+                    { text: "🔙 Back to Yogurt Puff", action: "product_yogurt" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            yogurt_storage: {
+                message: "🕒 Storage Information:\n\n• Shelf life: 6 months sealed\n• Store in cool, dry place\n• Refrigerate after opening\n• Consume within 7 days of opening",
+                options: [
+                    { text: "🔙 Back to Yogurt Puff", action: "product_yogurt" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            yogurt_price: {
+                message: "💲 Pricing & Availability:\n\n• Price: $5.99 per pack\n• Available in stores nationwide\n• Online ordering available\n• Subscribe & save 15%",
+                options: [
+                    { text: "🛒 Shop now", action: "shop" },
+                    { text: "🔙 Back to Yogurt Puff", action: "product_yogurt" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            milk_nutrition: {
+                message: "🍶 Condensed Milk Nutrition:\n\n• Calories: 150 per serving\n• Protein: 10g\n• Calcium: 30% DV\n• Live cultures: 1.5 billion CFU\n• Unsweetened\n• High in protein",
+                options: [
+                    { text: "🔙 Back to Condensed Milk", action: "product_milk" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            milk_storage: {
+                message: "🕒 Storage Information:\n\n• Shelf life: 12 months sealed\n• Store in cool, dry place\n• Refrigerate after opening\n• Consume within 5 days of opening",
+                options: [
+                    { text: "🔙 Back to Condensed Milk", action: "product_milk" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            milk_price: {
+                message: "💲 Pricing & Availability:\n\n• Price: $6.99 per can\n• Available in stores nationwide\n• Online ordering available\n• Subscribe & save 15%",
+                options: [
+                    { text: "🛒 Shop now", action: "shop" },
+                    { text: "🔙 Back to Condensed Milk", action: "product_milk" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            powder_nutrition: {
+                message: "🥛 Powdered Milk Nutrition:\n\n• Calories: 80 per serving\n• Protein: 8g\n• Calcium: 30% DV\n• Live cultures: 1 billion CFU\n• Easy to dissolve\n• Versatile use",
+                options: [
+                    { text: "🔙 Back to Powdered Milk", action: "product_powder" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            powder_storage: {
+                message: "🕒 Storage Information:\n\n• Shelf life: 18 months sealed\n• Store in cool, dry place\n• Keep container tightly closed\n• No refrigeration needed",
+                options: [
+                    { text: "🔙 Back to Powdered Milk", action: "product_powder" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            powder_price: {
+                message: "💲 Pricing & Availability:\n\n• Price: $8.99 per container\n• Available in stores nationwide\n• Online ordering available\n• Subscribe & save 15%",
+                options: [
+                    { text: "🛒 Shop now", action: "shop" },
+                    { text: "🔙 Back to Powdered Milk", action: "product_powder" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            health_tips: {
+                message: "Your gut deserves some love 💚\n\nWould you like to know about:",
+                options: [
+                    { text: "🦠 Benefits of probiotics", action: "probiotics_benefits" },
+                    { text: "🍽️ Foods that improve gut health", action: "gut_foods" },
+                    { text: "🚫 Signs of poor gut health", action: "poor_gut" },
+                    { text: "🧘 Lifestyle tips for a healthy gut", action: "lifestyle_tips" },
+                    { text: "🔙 Back to main menu", action: "greeting" }
+                ]
+            },
+            probiotics_benefits: {
+                message: "🦠 Benefits of Probiotics:\n\nProbiotics are live bacteria that help balance your gut microbiome. They can:\n\n• Improve digestion\n• Boost immunity\n• Enhance mood\n• Support weight management\n• Reduce inflammation\n\nWould you like to know how KareGut supports this naturally?",
+                options: [
+                    { text: "✅ Yes, tell me more", action: "karegut_probiotics" },
+                    { text: "🔙 Back to health tips", action: "health_tips" }
+                ]
+            },
+            karegut_probiotics: {
+                message: "KareGut products contain live probiotic cultures that:\n\n✓ Survive digestion to reach your gut\n✓ Are scientifically proven strains\n✓ Work naturally with your body\n✓ Provide consistent daily support\n\nOur lactose-free formula ensures everyone can benefit!",
+                options: [
+                    { text: "🥛 View our products", action: "products" },
+                    { text: "🔙 Back to health tips", action: "health_tips" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            gut_foods: {
+                message: "🍽️ Foods that Improve Gut Health:\n\n• Fermented foods (yogurt, kefir)\n• Fiber-rich vegetables\n• Whole grains\n• Prebiotic foods (garlic, onions)\n• Probiotic supplements\n\nKareGut products are perfect additions to your gut-healthy diet!",
+                options: [
+                    { text: "🔙 Back to health tips", action: "health_tips" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            poor_gut: {
+                message: "🚫 Signs of Poor Gut Health:\n\n• Frequent bloating\n• Digestive discomfort\n• Irregular bowel movements\n• Food sensitivities\n• Low energy levels\n• Skin issues\n\nIf you experience these, consider adding probiotics to your diet!",
+                options: [
+                    { text: "🥛 Explore KareGut products", action: "products" },
+                    { text: "🔙 Back to health tips", action: "health_tips" }
+                ]
+            },
+            lifestyle_tips: {
+                message: "🧘 Lifestyle Tips for a Healthy Gut:\n\n• Stay hydrated\n• Exercise regularly\n• Manage stress\n• Get enough sleep\n• Eat mindfully\n• Include probiotics daily\n\nSmall changes make a big difference!",
+                options: [
+                    { text: "🔙 Back to health tips", action: "health_tips" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            shop: {
+                message: "🛒 Sure! You can explore KareGut products available online and in stores.\n\nWould you like to:",
+                options: [
+                    { text: "🛍️ View our online store", action: "online_store" },
+                    { text: "🏬 Find a nearby retailer", action: "find_retailer" },
+                    { text: "💌 Get a personalized product recommendation", action: "recommendation_quiz" },
+                    { text: "🎁 View promotions & offers", action: "promotions" },
+                    { text: "🔙 Back to main menu", action: "greeting" }
+                ]
+            },
+            online_store: {
+                message: "🛍️ Visit our online store at:\nwww.karegut.com/shop\n\n• Free shipping on orders over $50\n• Subscribe & Save 15%\n• Easy returns within 30 days",
+                options: [
+                    { text: "🔙 Back to shop", action: "shop" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            find_retailer: {
+                message: "🏬 Find KareGut products near you!\n\nAvailable at:\n• Major supermarkets\n• Health food stores\n• Specialty retailers\n\nVisit www.karegut.com/locations to find the nearest store.",
+                options: [
+                    { text: "🔙 Back to shop", action: "shop" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            recommendation_quiz: {
+                message: "💌 Awesome! Let's find the best product for your gut health goals.\n\nDo you have lactose intolerance?",
+                options: [
+                    { text: "✅ Yes", action: "quiz_q2_yes" },
+                    { text: "❌ No", action: "quiz_q2_no" }
+                ]
+            },
+            quiz_q2_yes: {
+                message: "Perfect! All our products are 100% lactose-free.\n\nAre you looking for snacks or beverages?",
+                options: [
+                    { text: "🍪 Snack", action: "quiz_q3_snack" },
+                    { text: "🥤 Drink/Ingredient", action: "quiz_q3_drink" }
+                ]
+            },
+            quiz_q2_no: {
+                message: "Great! Our products are perfect for everyone.\n\nAre you looking for snacks or beverages?",
+                options: [
+                    { text: "🍪 Snack", action: "quiz_q3_snack" },
+                    { text: "🥤 Drink/Ingredient", action: "quiz_q3_drink" }
+                ]
+            },
+            quiz_q3_snack: {
+                message: "🧠 Perfect match!\n\nYou'll love our **KareGut Yogurt Puffs** — a lactose-free probiotic snack that's tasty and gut-friendly!\n\n✓ Light & crunchy\n✓ Packed with probiotics\n✓ Perfect on-the-go snack",
+                options: [
+                    { text: "📦 Learn more about Yogurt Puffs", action: "product_yogurt" },
+                    { text: "🛒 Shop now", action: "online_store" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            quiz_q3_drink: {
+                message: "🧠 Perfect match!\n\nTry our **KareGut Powdered Milk** or **Condensed Milk** — versatile, lactose-free options packed with probiotics!\n\n✓ Easy to use in recipes\n✓ Rich in nutrients\n✓ Great in coffee, smoothies & more",
+                options: [
+                    { text: "📦 Learn about Powdered Milk", action: "product_powder" },
+                    { text: "📦 Learn about Condensed Milk", action: "product_milk" },
+                    { text: "🛒 Shop now", action: "online_store" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            promotions: {
+                message: "🎁 We've got something special for our gut-health champions!\n\nWould you like to receive:",
+                options: [
+                    { text: "💬 10% off your first order", action: "promo_discount" },
+                    { text: "📰 KareGut Gut Health Newsletter", action: "promo_newsletter" },
+                    { text: "🧠 Free guide: '5 Days to a Happier Gut'", action: "promo_guide" },
+                    { text: "🔙 Back to shop", action: "shop" }
+                ]
+            },
+            promo_discount: {
+                message: "🎉 Great! Use code: **GUTLOVE10** for 10% off your first order!\n\nValid on www.karegut.com\nExpires: 30 days from today",
+                options: [
+                    { text: "🛍️ Shop now", action: "online_store" },
+                    { text: "📰 Also get the newsletter", action: "promo_newsletter" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            promo_newsletter: {
+                message: "📰 Awesome! Subscribe at www.karegut.com/newsletter to receive:\n\n• Weekly gut health tips\n• Exclusive offers\n• New product updates\n• Healthy recipes",
+                options: [
+                    { text: "🔙 Back to promotions", action: "promotions" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            promo_guide: {
+                message: "🧠 Download your FREE guide at:\nwww.karegut.com/5-day-guide\n\nLearn simple daily habits for better gut health in just 5 days!",
+                options: [
+                    { text: "🔙 Back to promotions", action: "promotions" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            support: {
+                message: "Would you like to talk to our support team or share feedback?",
+                options: [
+                    { text: "📞 Contact support", action: "contact_support" },
+                    { text: "🗣️ Give feedback", action: "feedback" },
+                    { text: "🔙 Back to main menu", action: "greeting" }
+                ]
+            },
+            contact_support: {
+                message: "📞 Contact Our Support Team:\n\n📧 Email: support@karegut.com\n📱 Phone: 1-800-KAREGUT\n💬 Live chat: Mon-Fri 9AM-5PM EST\n\nWe typically respond within 24 hours!",
+                options: [
+                    { text: "🔙 Back", action: "support" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            },
+            feedback: {
+                message: "🗣️ We'd love to hear from you!\n\nPlease share your feedback at:\nwww.karegut.com/feedback\n\nYour input helps us improve our products and service!",
+                options: [
+                    { text: "🔙 Back", action: "support" },
+                    { text: "🏠 Main menu", action: "greeting" }
+                ]
+            }
         };
 
         chatButton.addEventListener('click', () => {
+            const wasHidden = chatbotContainer.classList.contains('hidden');
             chatbotContainer.classList.toggle('hidden');
+            if (wasHidden && chatMessages.children.length === 0) {
+                initializeChat();
+            }
         });
 
         closeChat.addEventListener('click', () => {
             chatbotContainer.classList.add('hidden');
         });
 
-        document.querySelectorAll('.chat-question').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const question = e.target.getAttribute('data-question');
-                addMessage(question, 'user');
-                setTimeout(() => {
-                    addMessage(responses[question] || "I'm sorry, I don't have information on that. Please contact our support team for more details.", 'bot');
-                }, 500);
-            });
-        });
+        function initializeChat() {
+            chatState = 'greeting';
+            displayMessage(chatFlows[chatState]);
+        }
+
+        function displayMessage(flow) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'bg-gray-100 p-3 rounded-lg';
+            
+            const textP = document.createElement('p');
+            textP.className = 'text-sm whitespace-pre-line mb-3';
+            textP.textContent = flow.message;
+            messageDiv.appendChild(textP);
+
+            if (flow.options && flow.options.length > 0) {
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'space-y-2';
+                
+                flow.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.className = 'chat-question w-full text-left px-3 py-2 text-sm bg-white hover:bg-primary hover:text-white rounded-lg transition duration-200';
+                    button.textContent = option.text;
+                    button.onclick = () => handleOptionClick(option);
+                    optionsDiv.appendChild(button);
+                });
+                
+                messageDiv.appendChild(optionsDiv);
+            }
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function handleOptionClick(option) {
+            // Show user selection
+            addUserMessage(option.text);
+            
+            // Show bot response after short delay
+            setTimeout(() => {
+                chatState = option.action;
+                if (chatFlows[chatState]) {
+                    displayMessage(chatFlows[chatState]);
+                } else {
+                    displayMessage({
+                        message: "I'm here to help! Please choose from the options above or type your question.",
+                        options: []
+                    });
+                }
+            }, 500);
+        }
+
+        function addUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'bg-primary text-white p-3 rounded-lg ml-auto max-w-[80%]';
+            messageDiv.innerHTML = `<p class="text-sm">${text}</p>`;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
 
         sendChat.addEventListener('click', sendMessage);
         chatInput.addEventListener('keypress', (e) => {
@@ -525,20 +845,17 @@
         function sendMessage() {
             const message = chatInput.value.trim();
             if (message) {
-                addMessage(message, 'user');
+                addUserMessage(message);
                 chatInput.value = '';
+                
                 setTimeout(() => {
-                    addMessage("Thank you for your question! Our team will get back to you shortly with a detailed response.", 'bot');
-                }, 1000);
+                    const responseDiv = document.createElement('div');
+                    responseDiv.className = 'bg-gray-100 p-3 rounded-lg';
+                    responseDiv.innerHTML = `<p class="text-sm">Thank you for your message! For specific questions, please contact our support team at support@karegut.com or choose from the menu options above.</p>`;
+                    chatMessages.appendChild(responseDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 800);
             }
-        }
-
-        function addMessage(text, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `p-3 rounded-lg ${sender === 'user' ? 'bg-primary text-white ml-auto' : 'bg-gray-100 text-gray-800 mr-auto'}`;
-            messageDiv.innerHTML = `<p>${text}</p>`;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         // Simple animation for product cards on scroll
@@ -565,4 +882,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </body>
 
 </html>
-
