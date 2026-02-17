@@ -1,28 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta c        .product-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .nav-link:hover {
-            color: #5E8E3E;
-        }
-        /* Mobile Responsive Styles */
-        @media (max-width: 768px) {
-            .product-card {
-                margin-bottom: 2rem;
-            }
-            .product-card:hover {
-                transform: translateY(-5px);
-            }
-            .hero-section {
-                height: calc(100vh - 70px);
-            }
-        }"UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KareGood - Real Dairy, No Lactose</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
@@ -73,12 +52,85 @@
         .chat-question:hover {
             background: rgba(255,255,255,0.3);
         }
-.product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        
+        /* Enterprise-Level Product Card Styling */
+        .product-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
         }
+        
+        .product-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 20px 25px -5px rgba(94, 142, 62, 0.1);
+        }
+        
+        /* Professional Product Image Container */
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            padding-top: 75%; /* 4:3 Aspect Ratio */
+            overflow: hidden;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .product-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.08);
+            filter: brightness(1.05) contrast(1.05);
+        }
+        
+        /* Image Overlay Effect */
+        .product-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.03) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .product-card:hover .product-image-overlay {
+            opacity: 1;
+        }
+        
         .nav-link:hover {
             color: #5E8E3E;
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .product-card {
+                margin-bottom: 2rem;
+            }
+            .product-card:hover {
+                transform: translateY(-8px) scale(1.01);
+            }
+            .hero-section {
+                height: calc(100vh - 70px);
+            }
+            .product-image-container {
+                padding-top: 70%; /* Slightly less padding on mobile */
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .product-image-container {
+                padding-top: 80%; /* Taller aspect ratio on desktop for better display */
+            }
         }
     </style>
 </head>
@@ -141,31 +193,66 @@
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-16">Our Gut-Friendly Products</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 <!-- Product 1 -->
-                <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden transition duration-500 hover:shadow-xl">
-                    <img src="image01.jpg" alt="Yogurt Puff" class="w-full h-64 object-cover">
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="image01.jpg" alt="KAREGOOD High Protien RX Bite" class="product-image">
+                        <div class="product-image-overlay"></div>
+                    </div>
                     <div class="p-6">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Yogurt Puff</h3>
-                        <p class="text-gray-600 mb-4">Creamy dairy textures with fruity flavors, entirely lactose-free and gut-friendly.</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">KAREGOOD High Protien RX Bite</h3>
+                        <p class="text-gray-600 mb-4">Protein-packed bite for sustained energy, lactose-free with maximum nutrition.</p>
                         <button class="px-4 py-2 bg-primary text-white rounded-full hover:bg-green-700 transition duration-300 transform hover:scale-105 w-full">Learn More</button>
                     </div>
                 </div>
 
                 <!-- Product 2 -->
-                <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden transition duration-500 hover:shadow-xl">
-                    <img src="image02.jpg" alt="Unsweetened Condensed Milk" class="w-full h-64 object-cover">
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="image02.jpg" alt="Blurry Blueberry Yogurt Puff" class="product-image">
+                        <div class="product-image-overlay"></div>
+                    </div>
                     <div class="p-6">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Unsweetened Condensed Milk</h3>
-                        <p class="text-gray-600 mb-4">Lactose-free, unsweetened staple that retains rich creaminess and high protein value.</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Blurry Blueberry Yogurt Puff</h3>
+                        <p class="text-gray-600 mb-4">Delicious blueberry yogurt puff bursting with flavor, lactose-free and gut-friendly.</p>
                         <button class="px-4 py-2 bg-primary text-white rounded-full hover:bg-green-700 transition duration-300 transform hover:scale-105 w-full">Learn More</button>
                     </div>
                 </div>
 
                 <!-- Product 3 -->
-                <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden transition duration-500 hover:shadow-xl">
-                    <img src="image05.jpg" alt="Powdered Milk" class="w-full h-64 object-cover">
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="image03.jpg" alt="Vanity Vanilla Yogurt Puff" class="product-image">
+                        <div class="product-image-overlay"></div>
+                    </div>
                     <div class="p-6">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Powdered Milk</h3>
-                        <p class="text-gray-600 mb-4">Clean-label, versatile dairy essential offering rich nutrition without lactose concerns.</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Vanity Vanilla Yogurt Puff</h3>
+                        <p class="text-gray-600 mb-4">Creamy vanilla yogurt puff with rich dairy textures, entirely lactose-free and gut-friendly.</p>
+                        <button class="px-4 py-2 bg-primary text-white rounded-full hover:bg-green-700 transition duration-300 transform hover:scale-105 w-full">Learn More</button>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="image04.jpg" alt="Midday Mango Yogurt Puff" class="product-image">
+                        <div class="product-image-overlay"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Midday Mango Yogurt Puff</h3>
+                        <p class="text-gray-600 mb-4">Tropical mango yogurt puff for a refreshing treat, lactose-free and gut-friendly.</p>
+                        <button class="px-4 py-2 bg-primary text-white rounded-full hover:bg-green-700 transition duration-300 transform hover:scale-105 w-full">Learn More</button>
+                    </div>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="image05.jpg" alt="Starry Strawbery Yogurt Puff" class="product-image">
+                        <div class="product-image-overlay"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Starry Strawbery Yogurt Puff</h3>
+                        <p class="text-gray-600 mb-4">Sweet strawberry yogurt puff with natural flavors, lactose-free and gut-friendly.</p>
                         <button class="px-4 py-2 bg-primary text-white rounded-full hover:bg-green-700 transition duration-300 transform hover:scale-105 w-full">Learn More</button>
                     </div>
                 </div>
